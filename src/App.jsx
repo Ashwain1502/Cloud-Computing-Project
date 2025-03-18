@@ -22,7 +22,7 @@ const App = () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          setOutput(data.result !== undefined ? JSON.stringify(data.result) : "");
+          setOutput(data.result !== undefined ? data.result : "");
           setIsRunning(false);
         })
         .catch((error) => {
