@@ -1,6 +1,6 @@
 import { AppBar, Toolbar, Typography, Button } from "@mui/material";
 
-const Header = ({ runCode, setCode }) => {
+const Header = ({ runCode, setOutput }) => {
   return (
     <AppBar position="static" sx={{ bgcolor: "#333" }}>
       <Toolbar>
@@ -10,7 +10,7 @@ const Header = ({ runCode, setCode }) => {
         <Button color="success" variant="contained" onClick={runCode} sx={{ mr: 2 }}>
           Run
         </Button>
-        <Button color="error" variant="contained" onClick={() => setCode("// Write JavaScript code here...")}> 
+        <Button color="error" variant="contained" onClick={() => setOutput("")}> 
           Clear
         </Button>
       </Toolbar>
