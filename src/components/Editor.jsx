@@ -12,7 +12,9 @@ const Editor = ({ code, setCode }) => {
           defaultLanguage="javascript"
           theme="vs-dark"
           value={code}
-          onChange={(newCode) => setCode(newCode)}
+          onChange={(newCode) => {
+            if (newCode !== null) setCode(newCode); 
+          }}
         />
       </Paper>
     </Box>
