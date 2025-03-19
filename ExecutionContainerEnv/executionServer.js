@@ -1,8 +1,29 @@
+/* eslint-disable no-unused-vars */
 import express, { json } from "express";
 import { VM } from "vm2";
+import fs from "fs";
+
+
 
 const app = express();
 app.use(json());
+
+let containerId = null;
+
+const getContainerId = () => {
+    if (containerId !== null) return containerId; // Use cached value
+
+    try {
+        const cgroup = fs.readFileSync('/proc/self/cgroup', 'utf8');
+        const match = cgroup.match(/docker\/([a-f0-9]{64})/);
+        containerId = match ? match[1] : '';
+    } catch (error) {
+        containerId = '';
+    }
+
+    return containerId;
+};
+
 
 app.post("/execute", (req, res) => {
     try {
@@ -21,15 +42,13 @@ app.post("/execute", (req, res) => {
             },
         });
 
-        console.log("Executing Code:", code);
         const result = vm.run(`${code}`);
-        console.log("Execution Result:", result);
-
-        res.json({ output: result, logs });
+        const containerId = getContainerId();
+        res.json({ output: result, logs, containerId });
 
     } catch (error) {
         console.error("Execution Error:", error);
-        res.status(400).json({ error: error.message});
+        res.status(400).json({ error: error.message });
     }
 });
 

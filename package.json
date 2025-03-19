@@ -16,6 +16,8 @@
     "@mui/material": "^6.4.7",
     "axios": "^1.8.3",
     "cors": "^2.8.5",
+    "dockerode": "^4.0.4",
+    "dockerstats": "^2.4.2",
     "express": "^4.21.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
