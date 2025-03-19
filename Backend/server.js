@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import express from 'express';
 import axios from 'axios';
 import cors from 'cors';
@@ -6,7 +5,6 @@ import { getContainerIDs } from './dockerStatService/dockerContainerIDs.js';
 
 
 let containerIDs = [];
-
 const app = express();
 
 app.use(cors({

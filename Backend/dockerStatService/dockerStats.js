@@ -19,7 +19,7 @@ async function getContainerStats() {
         // Fetch stats for each filtered container
         for (const containerInfo of filteredContainers) {
             const container = docker.getContainer(containerInfo.Id);
-
+            
             container.stats({ stream: false }, (err, data) => {
                 if (err) {
                     console.error(`Error fetching stats for ${containerInfo.Id}:`, err.message);
@@ -32,15 +32,9 @@ async function getContainerStats() {
                     const memoryLimit = data.memory_stats.limit;
                     const memoryPercentage = (memoryUsage / memoryLimit) * 100;
 
-                    const networkUsage = data.networks ? Object.values(data.networks).reduce((acc, net) => ({
-                        rx_bytes: acc.rx_bytes + net.rx_bytes,
-                        tx_bytes: acc.tx_bytes + net.tx_bytes
-                    }), { rx_bytes: 0, tx_bytes: 0 }) : { rx_bytes: 0, tx_bytes: 0 };
-
                     console.log(`Stats for ${containerInfo.Id} (${containerInfo.Names[0]}):`);
                     console.log(`  CPU Usage: ${cpuUsage.toFixed(2)}%`);
                     console.log(`  Memory Usage: ${(memoryUsage / (1024 * 1024)).toFixed(2)} MB (${memoryPercentage.toFixed(2)}%)`);
-                    console.log(`  Network: Received ${networkUsage.rx_bytes} bytes, Sent ${networkUsage.tx_bytes} bytes\n`);
                 }
             });
         }

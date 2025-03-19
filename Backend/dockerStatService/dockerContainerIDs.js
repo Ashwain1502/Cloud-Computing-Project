@@ -1,23 +1,32 @@
 import Docker from "dockerode";
-const docker = new Docker();
+export const containerPortMap = {};
 
+const docker = new Docker();
 const TARGET_IMAGE = "code-executor"; // Replace with your image name
 
-export async function getContainerIDs() {
+export async function getContainerPorts() {
     try {
         // Get all running containers
         const containers = await docker.listContainers();
 
-        // Filter containers by image
-        const filteredContainers = containers
-            .filter(container => container.Image.includes(TARGET_IMAGE))
-            .map(container => container.Id); // Extract only container IDs
+        for (const container of containers) {
+            if (container.Image.includes(TARGET_IMAGE)) {
+                const containerId = container.Id;
 
-        return filteredContainers;
+                // Extract host port from container's port bindings
+                const ports = container.Ports;
+                const hostPort = ports.length > 0 ? ports[0].PublicPort : null;
+
+                containerPortMap[containerId] = hostPort;
+            }
+        }
+
+        return containerPortMap;
     } catch (error) {
-        console.error("Error fetching container IDs:", error.message);
-        return [];
+        console.error("Error fetching container ports:", error.message);
+        return {};
     }
 }
 
-
+// Example Usage
+getContainerPorts().then(data => console.log(data));
