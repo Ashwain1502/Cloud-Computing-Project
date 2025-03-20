@@ -1,10 +1,10 @@
+/* eslint-disable no-unused-vars */
 import express from 'express';
 import axios from 'axios';
 import cors from 'cors';
-import { getContainerIDandPorts } from './dockerStatService/dockerContainerIDs.js';
+import { getContainerStats } from './dockerStatService/dockerStats.js';
+import { redirectRequest } from "./redirectRequestService.js"
 
-
-let containerInfo;
 const app = express();
 
 app.use(cors({
@@ -21,31 +21,16 @@ app.post("/execute", (req, res) => {
         if (!code) {
             return res.status(400).json({ error: "No code provided" });
         }
-        var result = "";
-        axios.post('http://localhost:3000/execute', { code })
-            .then(response => {
-                result = response.data;
-                res.json({ result });
-            })
-            .catch(error => {
 
-                let output = error.response.data.error;
-
-                res.json({ result: { output } });
-            });
-
-
+        redirectRequest(req, res);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 });
 
 const PORT = 8080;
-app.listen(PORT, () => {
-    getContainerIDandPorts().then(info => {
-        containerInfo = info;
-        console.log(containerInfo);
-    });
+app.listen(PORT, async () => {
+    await getContainerStats();
 
     console.log(`Server running on http://localhost:${PORT}`);
 });
