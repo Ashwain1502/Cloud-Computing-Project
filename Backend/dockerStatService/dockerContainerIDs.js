@@ -4,7 +4,7 @@ export const containerPortMap = {};
 const docker = new Docker();
 const TARGET_IMAGE = "code-executor"; // Replace with your image name
 
-export async function getContainerPorts() {
+export async function getContainerIDandPorts() {
     try {
         // Get all running containers
         const containers = await docker.listContainers();
@@ -28,5 +28,4 @@ export async function getContainerPorts() {
     }
 }
 
-// Example Usage
-getContainerPorts().then(data => console.log(data));
+

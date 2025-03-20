@@ -48,7 +48,8 @@ app.post("/execute", (req, res) => {
 
     } catch (error) {
         console.error("Execution Error:", error);
-        res.status(400).json({ error: error.message });
+        const containerId = getContainerId();
+        res.status(400).json({ error: error.message, containerId });
     }
 });
 
