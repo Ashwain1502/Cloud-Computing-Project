@@ -8,8 +8,12 @@ const FreeEditor = () => {
   const [output, setOutput] = useState("");
   const navigate = useNavigate();
   const [isRunning, setIsRunning] = useState(false);
+  const [timeTaken, setTimeTaken] = useState(-1);
+
 
   const runCode = () => {
+    let initialTime = new Date().getTime();
+    
     setIsRunning(true);
     try {
       fetch("http://localhost:8080/execute", {
@@ -22,7 +26,7 @@ const FreeEditor = () => {
         .then((response) => response.json())
         .then((data) => {
           setOutput(data.result !== undefined ? data.result : "");
-          // if()
+          setTimeTaken(new Date().getTime() - initialTime);
           setIsRunning(false);
         })
         .catch((error) => {
@@ -97,6 +101,19 @@ const FreeEditor = () => {
             >
               {output.output || "Run the code to see the output"}
             </Box>
+            {timeTaken >= 0 && (
+              <Box
+                component="pre"
+                sx={{
+                  color: "#FFEB3B",
+                  fontSize: "1rem",
+                  whiteSpace: "pre-wrap",
+                  mt: 2,
+                }}
+              >
+                {`Time taken: ${timeTaken} ms`}
+              </Box>
+            )}
           </Paper>
         </Box>
       </Box>

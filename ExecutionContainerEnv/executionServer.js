@@ -34,7 +34,7 @@ app.post("/execute", (req, res) => {
 
         let logs = [];
         const vm = new VM({
-            timeout: 1000,
+            timeout: 5000,
             sandbox: {
                 console: {
                     log: (...args) => logs.push(args.join(" ")), // Capture logs

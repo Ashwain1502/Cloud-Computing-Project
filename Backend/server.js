@@ -3,7 +3,7 @@ import express from 'express';
 import axios from 'axios';
 import cors from 'cors';
 import { getContainerStats } from './dockerStatService/dockerStats.js';
-import { redirectRequest } from "./redirectRequestService.js"
+import { queueRequest } from "./redirectRequestService.js"
 
 const app = express();
 
@@ -17,12 +17,12 @@ app.use(express.json());
 
 app.post("/execute", (req, res) => {
     try {
-        const code = req.body.code;
-        if (!code) {
+        
+        if (!req.body.code) {
             return res.status(400).json({ error: "No code provided" });
         }
 
-        redirectRequest(req, res);
+        queueRequest(req, res);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
